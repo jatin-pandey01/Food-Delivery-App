@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/pages/login.dart';
 import 'package:flutter_application_1/widget/widget_support.dart';
@@ -46,7 +47,7 @@ class _SignUpState extends State<SignUp> {
                       child: Container(
                         padding: EdgeInsets.only(left: 20,right: 20),
                         width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height/2,
+                        height: MediaQuery.of(context).size.height/1.85,
                         decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(20)),
                         child: Column(
                           children: [
@@ -92,16 +93,19 @@ class _SignUpState extends State<SignUp> {
                           
                         });
                       },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            child: Text("Already have an account ?", style: TextStyle(color: Colors.black, fontSize: 18.0,fontWeight: FontWeight.bold, fontFamily: 'Poppins' ),),
-                          ),
-                          Container(
-                            child: Text(" Login", style: TextStyle(color: Colors.red, fontSize: 20,decoration: TextDecoration.underline, decorationColor: Colors.red, decorationThickness: 2, fontWeight: FontWeight.w900, fontFamily: 'Poppins'),),
-                          ),
-                        ],
+                      child: Container(
+                        margin:EdgeInsets.only(bottom: 50) ,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              child: Text("Already have an account ?", style: TextStyle(color: Colors.black, fontSize: 18.0,fontWeight: FontWeight.bold, fontFamily: 'Poppins' ),),
+                            ),
+                            Container(
+                              child: Text(" Login", style: TextStyle(color: Colors.red, fontSize: 20,decoration: TextDecoration.underline, decorationColor: Colors.red, decorationThickness: 2, fontWeight: FontWeight.w900, fontFamily: 'Poppins'),),
+                            ),
+                          ],
+                        ),
                       ),
                     )
                   ],
