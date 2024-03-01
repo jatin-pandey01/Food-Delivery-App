@@ -7,8 +7,8 @@ import 'package:flutter_application_1/pages/onboard.dart';
 import 'package:flutter_application_1/pages/signup.dart';
 
 void main() async{
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
