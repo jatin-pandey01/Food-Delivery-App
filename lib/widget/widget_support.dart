@@ -29,4 +29,5 @@ class AppWidget{
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Poppins');
   }
+  
 }

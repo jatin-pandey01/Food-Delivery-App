@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -13,6 +14,52 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  
+  String name = "", email = "", password = "";
+  TextEditingController nameController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
+  TextEditingController emailController = new TextEditingController();
+
+  registration() async{
+    if(password != null && name != null && email != null){
+      try {
+        UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.green,
+            content: Text("Registered Successfully",style: TextStyle(fontSize: 20.0, color: Colors.white, fontFamily: 'Poppins'),),
+          )
+        );
+      } on FirebaseException catch (e) {
+        if(e.code == 'weak-password'){
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.redAccent,
+              content: Text("Provided Password is too weak", style: TextStyle(fontSize: 20.0, fontFamily: 'Poppins'),)
+            )
+          );
+        }
+        else if(e.code == 'email-already-in-use'){
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.redAccent,
+              content: Text("Account already Exist", style: TextStyle(fontSize: 20.0, fontFamily: 'Poppins'),)
+            )
+          );
+        }
+      }
+    }
+    else{
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.redAccent,
+          content: Text("Please fill all details", style: TextStyle(fontSize: 20.0, color: Colors.white),)
+        )
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
