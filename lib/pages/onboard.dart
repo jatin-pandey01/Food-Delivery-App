@@ -82,7 +82,7 @@ class _OnboardState extends State<Onboard> {
               if( currentIndex == contents.length - 1 ){
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SignUp()));
               }
-              _controller.nextPage(duration: Duration(milliseconds: 500), curve: Curves.linear);
+              _controller.nextPage(duration: Duration(milliseconds: 300), curve: Curves.linear);
               
             },
             child: Container(

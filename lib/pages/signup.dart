@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_application_1/pages/bottomnav.dart';
 import 'package:flutter_application_1/pages/login.dart';
 import 'package:flutter_application_1/widget/widget_support.dart';
 
@@ -19,19 +20,23 @@ class _SignUpState extends State<SignUp> {
   TextEditingController nameController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
   TextEditingController emailController = new TextEditingController();
+  final _formkey = GlobalKey<FormState>();
 
   registration() async{
     if(password != null && name != null && email != null){
       try {
-        UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
-
+        final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email,password: password);
+        print(userCredential);
+        // print("Hello India");
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Colors.green,
             content: Text("Registered Successfully",style: TextStyle(fontSize: 20.0, color: Colors.white, fontFamily: 'Poppins'),),
           )
         );
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BottomNav()));
       } on FirebaseException catch (e) {
+        print(e);
         if(e.code == 'weak-password'){
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -47,6 +52,15 @@ class _SignUpState extends State<SignUp> {
               content: Text("Account already Exist", style: TextStyle(fontSize: 20.0, fontFamily: 'Poppins'),)
             )
           );
+        }
+        else if(e.code == 'invalid-email'){
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.redAccent,
+              content: Text("Wrong Email id", style: TextStyle(fontSize: 20.0,fontFamily: 'Poppins'),)
+            )
+          );
+
         }
       }
     }
@@ -96,39 +110,75 @@ class _SignUpState extends State<SignUp> {
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height/1.85,
                         decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(20)),
-                        child: Column(
-                          children: [
-                            SizedBox(height: 30,),
-                            Text("Sign Up", style: AppWidget.HeadlineTextFieldStyle(),),
-                            
-                            SizedBox(height: 30,),
-                            TextField(
-                              style: AppWidget.SemiBoldTextFieldStyle(),
-                              decoration: InputDecoration(hintText: "Name", hintStyle: AppWidget.BoldTextFieldStyle(),prefixIcon: Icon(Icons.person_2_outlined)),
-                            ),
-                            SizedBox(height: 30,),
-                            TextField(
-                              style: AppWidget.SemiBoldTextFieldStyle(),
-                              decoration: InputDecoration(hintText: "Email", hintStyle: AppWidget.BoldTextFieldStyle(),prefixIcon: Icon(Icons.email_outlined)),
-                            ),
-                            SizedBox(height: 30,),
-                            TextField(
-                              style: AppWidget.SemiBoldTextFieldStyle(),
-                              obscureText: true,
-                              decoration: InputDecoration(hintText: "Password",hintStyle: AppWidget.BoldTextFieldStyle(), prefixIcon: Icon(Icons.password_outlined)),),
-                            SizedBox(height: 40,),
-                            Material(
-                              elevation: 5.0,
-                              borderRadius: BorderRadius.circular(20),
-                              child: Container(
-                                width: 200,
-                                padding: EdgeInsets.symmetric(vertical: 8.0),
-                                decoration: BoxDecoration(color: Color(0xffff5722),//Color code always start with 0xff and after this that hex decimal code come
-                                borderRadius: BorderRadius.circular(20)),
-                                child: Center(child: Text("SIGN UP",style: TextStyle(color: Colors.white,fontSize: 18.0, fontFamily: 'Poppins', fontWeight: FontWeight.bold),)),
+                        child: Form(
+                          key: _formkey,
+                          child: Column(
+                            children: [
+                              SizedBox(height: 30,),
+                              Text("Sign Up", style: AppWidget.HeadlineTextFieldStyle(),),
+                              
+                              SizedBox(height: 30,),
+                              TextFormField(
+                                controller: nameController,
+                                validator: (value) {
+                                  if(value == null || value.isEmpty){
+                                    return "Please Enter Name";
+                                  }
+                                  return null;
+                                },
+                                style: AppWidget.SemiBoldTextFieldStyle(),
+                                decoration: InputDecoration(hintText: "Name", hintStyle: AppWidget.BoldTextFieldStyle(),prefixIcon: Icon(Icons.person_2_outlined)),
                               ),
-                            ),
-                          ],
+                              SizedBox(height: 30,),
+                              TextFormField(
+                                controller: emailController,
+                                validator: (value) {
+                                  if(value == null || value.isEmpty){
+                                    return "Please Enter Email";
+                                  }
+                                  return null;
+                                },
+                                style: AppWidget.SemiBoldTextFieldStyle(),
+                                decoration: InputDecoration(hintText: "Email", hintStyle: AppWidget.BoldTextFieldStyle(),prefixIcon: Icon(Icons.email_outlined)),
+                              ),
+                              SizedBox(height: 30,),
+                              TextFormField(
+                                controller: passwordController,
+                                validator: (value) {
+                                  if(value == null || value.isEmpty){
+                                    return "Please Enter Password";
+                                  }
+                                  return null;
+                                },
+                                style: AppWidget.SemiBoldTextFieldStyle(),
+                                obscureText: true,
+                                decoration: InputDecoration(hintText: "Password",hintStyle: AppWidget.BoldTextFieldStyle(), prefixIcon: Icon(Icons.password_outlined)),),
+                              SizedBox(height: 40,),
+                              GestureDetector(
+                                onTap: () async {
+                                  if(_formkey.currentState!.validate()){
+                                    setState(() {
+                                      email = emailController.text;
+                                      name = nameController.text;
+                                      password = passwordController.text;
+                                      registration();
+                                    });
+                                  }
+                                },
+                                child: Material(
+                                  elevation: 5.0,
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: Container(
+                                    width: 200,
+                                    padding: EdgeInsets.symmetric(vertical: 8.0),
+                                    decoration: BoxDecoration(color: Color(0xffff5722),//Color code always start with 0xff and after this that hex decimal code come
+                                    borderRadius: BorderRadius.circular(20)),
+                                    child: Center(child: Text("SIGN UP",style: TextStyle(color: Colors.white,fontSize: 18.0, fontFamily: 'Poppins', fontWeight: FontWeight.bold),)),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
