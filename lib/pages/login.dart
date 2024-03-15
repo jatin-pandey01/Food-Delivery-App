@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_application_1/pages/bottomnav.dart';
 import 'package:flutter_application_1/pages/signup.dart';
 import 'package:flutter_application_1/widget/widget_support.dart';
 
@@ -12,6 +14,54 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
+  String email = "", password = "";
+  TextEditingController emailController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
+  final _formkey = GlobalKey<FormState>();
+
+  login() async {
+    if(email != null && password != null){
+      try {
+        final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+        print(userCredential);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.green,
+            content: Text("Registered Successfully",style: TextStyle(fontSize: 20.0, color: Colors.white, fontFamily: 'Poppins'),),
+          )
+        );
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BottomNav()));
+        
+      } on FirebaseException catch (e) {
+        if(e.code == 'invalid-email'){
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.redAccent,
+              content: Text("Wrong Email id", style: TextStyle(fontSize: 20.0,fontFamily: 'Poppins'),)
+            )
+          );
+        }
+        else{
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor: Colors.redAccent,
+              content: Text("User not Exist", style: TextStyle(fontSize: 20.0,fontFamily: 'Poppins'),)
+            )
+          );
+        }
+      }
+    }
+    else{
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.redAccent,
+          content: Text("Please fill all details", style: TextStyle(fontSize: 20.0, color: Colors.white),)
+        )
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,36 +98,62 @@ class _LoginState extends State<Login> {
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height/2,
                         decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(20)),
-                        child: Column(
-                          children: [
-                            SizedBox(height: 30,),
-                            Text("Login", style: AppWidget.HeadlineTextFieldStyle(),),
-                            SizedBox(height: 30,),
-                            TextField(
-                              decoration: InputDecoration(hintText: "Email", hintStyle: AppWidget.BoldTextFieldStyle(),prefixIcon: Icon(Icons.email_outlined)),
-                            ),
-                            SizedBox(height: 30,),
-                            TextField(
-                              obscureText: true,
-                              decoration: InputDecoration(hintText: "Password",hintStyle: AppWidget.BoldTextFieldStyle(), prefixIcon: Icon(Icons.password_outlined)),),
-                            SizedBox(height: 20,),
-                            Container(
-                              alignment: Alignment.topRight,
-                              child: Text("Forgot Password ? ",style: AppWidget.SemiBoldTextFieldStyle(),)
-                            ),
-                            SizedBox(height: 60,),
-                            Material(
-                              elevation: 5.0,
-                              borderRadius: BorderRadius.circular(20),
-                              child: Container(
-                                width: 200,
-                                padding: EdgeInsets.symmetric(vertical: 8.0),
-                                decoration: BoxDecoration(color: Color(0xffff5722),//Color code always start with 0xff and after this that hex decimal code come
-                                borderRadius: BorderRadius.circular(20)),
-                                child: Center(child: Text("LOGIN",style: TextStyle(color: Colors.white,fontSize: 18.0, fontFamily: 'Poppins', fontWeight: FontWeight.bold),)),
+                        child: Form(
+                          key: _formkey,
+                          child: Column(
+                            children: [
+                              SizedBox(height: 30,),
+                              Text("Login", style: AppWidget.HeadlineTextFieldStyle(),),
+                              SizedBox(height: 30,),
+                              TextFormField(
+                                controller: emailController,
+                                validator: (value) {
+                                  if(value == null || value.isEmpty){
+                                    return "Please Enter Email";
+                                  }
+                                },
+                                decoration: InputDecoration(hintText: "Email", hintStyle: AppWidget.BoldTextFieldStyle(),prefixIcon: Icon(Icons.email_outlined)),
                               ),
-                            ),
-                          ],
+                              SizedBox(height: 30,),
+                              TextFormField(
+                                controller: passwordController,
+                                validator: (value) {
+                                  if(value == null || value.isEmpty){
+                                    return "Please Enter Password";
+                                  }
+                                },
+                                obscureText: true,
+                                decoration: InputDecoration(hintText: "Password",hintStyle: AppWidget.BoldTextFieldStyle(), prefixIcon: Icon(Icons.password_outlined)),),
+                              SizedBox(height: 20,),
+                              Container(
+                                alignment: Alignment.topRight,
+                                child: Text("Forgot Password ? ",style: AppWidget.SemiBoldTextFieldStyle(),)
+                              ),
+                              SizedBox(height: 60,),
+                              GestureDetector(
+                                onTap: () {
+                                  if(_formkey.currentState!.validate()){
+                                    setState(() {
+                                      email = emailController.text;
+                                      password = passwordController.text;
+                                      login();
+                                    });
+                                  }
+                                },
+                                child: Material(
+                                  elevation: 5.0,
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: Container(
+                                    width: 200,
+                                    padding: EdgeInsets.symmetric(vertical: 8.0),
+                                    decoration: BoxDecoration(color: Color(0xffff5722),//Color code always start with 0xff and after this that hex decimal code come
+                                    borderRadius: BorderRadius.circular(20)),
+                                    child: Center(child: Text("LOGIN",style: TextStyle(color: Colors.white,fontSize: 18.0, fontFamily: 'Poppins', fontWeight: FontWeight.bold),)),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
