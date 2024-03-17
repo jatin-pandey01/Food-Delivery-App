@@ -153,7 +153,7 @@ class _SignUpState extends State<SignUp> {
                                 style: AppWidget.SemiBoldTextFieldStyle(),
                                 obscureText: true,
                                 decoration: InputDecoration(hintText: "Password",hintStyle: AppWidget.BoldTextFieldStyle(), prefixIcon: Icon(Icons.password_outlined)),),
-                              SizedBox(height: 40,),
+                              SizedBox(height: 30,),
                               GestureDetector(
                                 onTap: () async {
                                   if(_formkey.currentState!.validate()){
@@ -162,6 +162,17 @@ class _SignUpState extends State<SignUp> {
                                       name = nameController.text;
                                       password = passwordController.text;
                                       registration();
+                                    });
+                                  }
+                                  else{
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        backgroundColor: Colors.redAccent,
+                                        content: Text("Please fill all details", style: TextStyle(fontSize: 20.0, color: Colors.white),)
+                                      )
+                                    );
+                                    setState(() {
+                                    
                                     });
                                   }
                                 },

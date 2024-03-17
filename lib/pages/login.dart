@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_1/pages/bottomnav.dart';
+import 'package:flutter_application_1/pages/forgetpassword.dart';
 import 'package:flutter_application_1/pages/signup.dart';
 import 'package:flutter_application_1/widget/widget_support.dart';
 
@@ -20,45 +21,42 @@ class _LoginState extends State<Login> {
   TextEditingController passwordController = new TextEditingController();
   final _formkey = GlobalKey<FormState>();
 
-  login() async {
-    if(email != null && password != null){
-      try {
-        final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
-        print(userCredential);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Colors.green,
-            content: Text("Registered Successfully",style: TextStyle(fontSize: 20.0, color: Colors.white, fontFamily: 'Poppins'),),
-          )
-        );
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BottomNav()));
-        
-      } on FirebaseException catch (e) {
-        if(e.code == 'invalid-email'){
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.redAccent,
-              content: Text("Wrong Email id", style: TextStyle(fontSize: 20.0,fontFamily: 'Poppins'),)
-            )
-          );
-        }
-        else{
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.redAccent,
-              content: Text("User not Exist", style: TextStyle(fontSize: 20.0,fontFamily: 'Poppins'),)
-            )
-          );
-        }
-      }
-    }
-    else{
+  userLogin() async {
+    try {
+      final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+      print(userCredential);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          backgroundColor: Colors.redAccent,
-          content: Text("Please fill all details", style: TextStyle(fontSize: 20.0, color: Colors.white),)
+          backgroundColor: Colors.green,
+          content: Text("Registered Successfully",style: TextStyle(fontSize: 20.0, color: Colors.white, fontFamily: 'Poppins'),),
         )
       );
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>BottomNav()));  
+    } on FirebaseException catch (e) {
+      if(e.code == 'user-not-find'){
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.redAccent,
+            content: Text("No User Found for this Email", style:TextStyle(fontSize: 20.0,fontFamily: 'Poppins'),)
+          )
+        );
+      }
+      else  if(e.code == 'wrong-password'){
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.redAccent,
+            content: Text("Wrong password", style: TextStyle(fontSize: 20.0,fontFamily: 'Poppins'),)
+          )
+        );
+      }
+      else{
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.redAccent,
+            content: Text(e.code, style: TextStyle(fontSize: 20.0,fontFamily: 'Poppins'),)
+          )
+        );
+      }
     }
   }
 
@@ -125,20 +123,50 @@ class _LoginState extends State<Login> {
                                 obscureText: true,
                                 decoration: InputDecoration(hintText: "Password",hintStyle: AppWidget.BoldTextFieldStyle(), prefixIcon: Icon(Icons.password_outlined)),),
                               SizedBox(height: 20,),
-                              Container(
-                                alignment: Alignment.topRight,
-                                child: Text("Forgot Password ? ",style: AppWidget.SemiBoldTextFieldStyle(),)
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>ForgetPassword()));
+                                  setState(() {
+                                    
+                                  });
+                                },
+                                child: Container(
+                                  alignment: Alignment.topRight,
+                                  child: Text("Forgot Password ? ",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Poppins',
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: Colors.black,
+                                      decorationThickness: 2.0,
+                                      decorationStyle: TextDecorationStyle.solid
+                                    ),)
+                                ),
                               ),
-                              SizedBox(height: 60,),
+                              SizedBox(height: 40,),
                               GestureDetector(
                                 onTap: () {
                                   if(_formkey.currentState!.validate()){
                                     setState(() {
                                       email = emailController.text;
                                       password = passwordController.text;
-                                      login();
+                                      userLogin();
                                     });
                                   }
+                                  else{
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        backgroundColor: Colors.redAccent,
+                                        content: Text("Please fill all details", style: TextStyle(fontSize: 20.0, color: Colors.white),)
+                                      )
+                                    );
+                                    setState(() {
+                                    
+                                    });
+                                  }
+                                  
                                 },
                                 child: Material(
                                   elevation: 5.0,
