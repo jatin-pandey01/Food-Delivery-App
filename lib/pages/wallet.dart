@@ -92,7 +92,7 @@ class _WalletState extends State<Wallet> {
                 child: Center(
                   child: Text("Add Money",style: TextStyle(color: Colors.white, fontSize: 16.0, fontFamily: 'Poppins', fontWeight: FontWeight.bold),),
                 ),
-              )
+              ),
             ],
           ),
         ),

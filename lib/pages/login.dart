@@ -132,7 +132,7 @@ class _LoginState extends State<Login> {
                                 },
                                 child: Container(
                                   alignment: Alignment.topRight,
-                                  child: Text("Forgot Password ? ",
+                                  child: const Text("Forgot Password ? ",
                                     style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 18.0,
@@ -157,7 +157,7 @@ class _LoginState extends State<Login> {
                                   }
                                   else{
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
+                                      const SnackBar(
                                         backgroundColor: Colors.redAccent,
                                         content: Text("Please fill all details", style: TextStyle(fontSize: 20.0, color: Colors.white),)
                                       )
@@ -173,10 +173,10 @@ class _LoginState extends State<Login> {
                                   borderRadius: BorderRadius.circular(20),
                                   child: Container(
                                     width: 200,
-                                    padding: EdgeInsets.symmetric(vertical: 8.0),
+                                    padding: const EdgeInsets.symmetric(vertical: 8.0),
                                     decoration: BoxDecoration(color: Color(0xffff5722),//Color code always start with 0xff and after this that hex decimal code come
                                     borderRadius: BorderRadius.circular(20)),
-                                    child: Center(child: Text("LOGIN",style: TextStyle(color: Colors.white,fontSize: 18.0, fontFamily: 'Poppins', fontWeight: FontWeight.bold),)),
+                                    child: const Center(child: Text("LOGIN",style: TextStyle(color: Colors.white,fontSize: 18.0, fontFamily: 'Poppins', fontWeight: FontWeight.bold),)),
                                   ),
                                 ),
                               ),
@@ -185,7 +185,7 @@ class _LoginState extends State<Login> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 100,),
+                    const SizedBox(height: 100,),
                     GestureDetector(
                       onTap: () {
                         Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUp()));
@@ -197,10 +197,10 @@ class _LoginState extends State<Login> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            child: Text("Don\'t have an account ?", style: TextStyle(color: Colors.black, fontSize: 18.0,fontWeight: FontWeight.bold, fontFamily: 'Poppins' ),),
+                            child: const Text("Don\'t have an account ?", style: TextStyle(color: Colors.black, fontSize: 18.0,fontWeight: FontWeight.bold, fontFamily: 'Poppins' ),),
                           ),
                           Container(
-                            child: Text(" Sign up", style: TextStyle(color: Colors.red, fontSize: 20,decoration: TextDecoration.underline, decorationColor: Colors.red, decorationThickness: 2, fontWeight: FontWeight.w900, fontFamily: 'Poppins'),),
+                            child: const Text(" Sign up", style: TextStyle(color: Colors.red, fontSize: 20,decoration: TextDecoration.underline, decorationColor: Colors.red, decorationThickness: 2, fontWeight: FontWeight.w900, fontFamily: 'Poppins'),),
                           ),
                         ],
                       ),
