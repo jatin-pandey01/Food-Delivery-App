@@ -1,8 +1,10 @@
 import 'dart:io';
-
+import 'dart:math';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/widget/widget_support.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:random_string/random_string.dart';
 
 class AddFood extends StatefulWidget {
   const AddFood({super.key});
@@ -29,6 +31,16 @@ class _AddFoodState extends State<AddFood> {
     setState(() {
       
     });
+  }
+
+  uploadItem() async{
+    if(selectedImage != null && nameController.text != "" && priceController.text != "" && detailController.text != ""){
+      String addId = randomAlphaNumeric(10);
+
+      Reference firebaseStorageRef = FirebaseStorage.instance.ref().child("blogImage").child(addId);
+      final UploadTask task = firebaseStorageRef.putFile(selectedImage!);
+      var downloadUrl = await ( await task).ref.getDownloadURL();
+    }
   }
 
   @override
@@ -79,7 +91,10 @@ class _AddFoodState extends State<AddFood> {
                       width: 150,
                       height: 150,
                       decoration: BoxDecoration(border: Border.all(color: Colors.black, width: 1.5), borderRadius: BorderRadius.circular(20.0)),
-                      child: Image.file(selectedImage!, fit: BoxFit.cover,),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20.0),
+                        child: Image.file(selectedImage!, fit: BoxFit.cover,)
+                      ),
                     ),
                   ),
                 ),
